@@ -1,0 +1,140 @@
+services:
+
+  # Lighthouse Notes Server - API Server for Lighthouse Notes
+  server:
+    image: ghcr.io/lighthousenotes/server:latest
+    container_name: lighthousenotes-server
+    links:
+      - database
+      - meilisearch
+      - redis
+    volumes:
+      - ./BlinkBinaries:/app/BlinkBinaries
+    environment:
+    - AllowedHosts=*
+    - Auth0__DOMAIN=example.auth0.com
+    - Auth0__Audience=https://api.example.com
+    - ConnectionStrings__Database=Host=database;Database=lighthousenotes;Username=lighthousenotes;Password=CHANGEME
+    - ConnectionStrings__Redis=redis
+    - Logging__LogLevel__Default=Warning
+    - Logging__LogLevel__Microsoft.AspNetCore=Warning
+    - Logging__LogLevel__Microsoft.Hosting.Lifetime=Warning
+    - Sqids__MinLength=10
+    - Sqids__Alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+    - Syncfusion__LicenseKey=CHANGEME
+    - Urls=http://server:6000
+    - WebApp=https://app.example.com
+    restart: unless-stopped
+
+  # Lighthouse Notes Web - Blazor web app for Lighthouse Notes
+  web:
+    image: ghcr.io/lighthousenotes/web:latest
+    container_name: lighthousenotes-web
+    links:
+      - redis
+    volumes:
+      - ./lighthousenotes.pfx:/lighthousenotes.pfx
+    environment:
+    - AllowedHosts=*
+    - ASPNETCORE_Kestrel__Certificates__Default__Path=/lighthousenotes.pfx
+    - ASPNETCORE_Kestrel__Certificates__Default__Password=CHANGEME
+    - Auth0__DOMAIN=example.auth0.com
+    - Auth0__Auth__Audience=https://api.example.com
+    - Auth0__Auth__ClientId=CHANGEME
+    - Auth0__Auth__ClientSecret=CHANGEME
+    - Auth0__Management__Audience=https://api.example.com
+    - Auth0__Management__ClientId=CHANGEME
+    - Auth0__Management__ClientSecret=CHANGEME
+    - Auth0__Roles__user=CHANGEME
+    - Auth0__Roles__sio=CHANGEME
+    - Auth0__Roles__organization-administrator=CHANGEME
+    - Auth0__ConnectionId=CHANGEME
+    - ConnectionStrings__Redis=redis
+    - Syncfusion__LicenseKey=CHANGEME
+    - Logging__LogLevel__Default=Warning
+    - Logging__LogLevel__Microsoft.AspNetCore=Warning
+    - Urls=https://web:5000
+    - LighthouseNotesApiUrl=https://api.example.com
+    restart: unless-stopped
+
+  #  Secure Web Application Gateway - Nginx & Let's Encrypt
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    links:
+      - server
+      - web
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - URL=example.com
+      - VALIDATION=http
+      - SUBDOMAINS=app,api,s3
+      - ONLY_SUBDOMAINS=true
+    volumes:
+      - ./swag:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+
+  # PostgreSQL Database - Open-source relational database
+  database:
+    image: postgres:14
+    container_name: database
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=lighthousenotes
+      - POSTGRES_USER=lighthousenotes
+      - POSTGRES_PASSWORD=CHANGEME
+      - POSTGRES_ROOT_PASSWORD=CHANGEME
+    restart: unless-stopped
+
+  # Minio - Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      -  ./minio:/data
+      - ./swag/etc/letsencrypt/live/app.example.com/fullchain.pem:/root/.minio/certs/public.crt
+      - ./swag/etc/letsencrypt/live/app.example.com/privkey.pem:/root/.minio/certs/private.key
+      - ./swag/etc/letsencrypt/live/app.example.com/fullchain.pem:/root/.minio/certs/CAs/public.crt
+      - ./swag/etc/letsencrypt/live/app.example.com/privkey.pem:/root/.minio/certs/CAs/private.key
+    environment:
+      - MINIO_SERVER_URL=https://s3.example.com:9000
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=CHANGEME
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  # Redis - in-memory data structure store,
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      -  ./redis:/data
+    command: ["redis-server"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+
+  # Meilisearch - flexible and powerfull search
+  meilisearch:
+    container_name: meilisearch
+    image: getmeili/meilisearch:v1.6
+    environment:
+      - MEILI_MASTER_KEY=CHANGEME
+    volumes:
+      - ./data.ms:/data.ms
+    restart: unless-stopped
