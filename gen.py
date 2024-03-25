@@ -88,7 +88,7 @@ compose["services"]["server"]["environment"]["WebApp"] = f"https://app.{root_dom
 # Web #
 #######
 # Certificate
-compose["services"]["web"]["environment"]["Certificates__Default__Password"] = certificate_password
+compose["services"]["web"]["environment"]["ASPNETCORE_Kestrel__Certificates__Default__Password"] = certificate_password
 
 # Auth0
 compose["services"]["web"]["environment"]["Auth0__DOMAIN"] = auth0_domain
