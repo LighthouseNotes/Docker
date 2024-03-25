@@ -86,6 +86,7 @@ After you have create an account and obtained a license, navigate to https://www
 Click "Get License Key", copy the license key and when prompted in the gen.py script enter it. 
 
 > [!IMPORTANT]
+> 
 > The license key will only be shown once!
 
 ### Auth0
@@ -95,9 +96,9 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
 2. Navigate to Dashboard > Applications > APIs and create an API.
    ![Alt text](.images/step2.png)
    
-   > [!NOTE]
-   > 
-   > Replace example.com with your own domain name.
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
    
    
 
@@ -108,19 +109,19 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
    
    - Set "Application Login URI" to `https://app.example.com/account/login?returnUrl=` 
      
-     > [!NOTE]
-     > 
-     > Replace example.com with your own domain name.
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
    - Set "Allowed Callback URLs to `https://app.example.com/callback` 
-     
-     > [!NOTE]
-     > 
-     > Replace example.com with your own domain name.
+ 
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
    - Set "Allowed Logout URLS to `https://app.example.com/`
      
-     > [!NOTE]
-     > 
-     > Replace example.com with your own domain name.
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
    - Enable "Refresh Token Rotation"
    - Enable "Inactivity Expiration".
      ![Alt text](.images/step3-1.png)
@@ -142,9 +143,9 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
    organization-administrator 
    ```
    
-   > [!WARNING]
-   > 
-   > Role names are case senstive
+> [!WARNING]
+> 
+> Role names are case senstive
    
    ![Alt text](.images/step5.png)
 
@@ -206,22 +207,22 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
 
 2. Unzip the file with `unzip syncfusionessentialhtmlconverter.zip "BlinkBinaries/*" -d "./BlinkBinaries"`
    
-   > [!IMPORTANT]
-   > The BlinkBinaries folder must be in the same directory as the docker-compose.yml file
+> [!IMPORTANT]
+> The BlinkBinaries folder must be in the same directory as the docker-compose.yml file
 
 3. Generate a self signed certificate `dotnet dev-certs https -ep lighthousenotes.pfx -p CHANGME`. 
    
-   > [!NOTE]
-   > 
-   > Replace CHANGEME with the password you specified in the script for the "Certificate Password" prompt
+> [!NOTE]
+> 
+> Replace CHANGEME with the password you specified in the script for the "Certificate Password" prompt
 
 4. Start SWAG with `docker compose up -d swag`.
 
 5. Once you see `successfully received certificate`and `Server ready` in the swag container logs, move to step 6.
    
-   > [!TIP]
-   > 
-   > Use `docker logs swag` to view the container logs
+> [!TIP]
+> 
+> Use `docker logs swag` to view the container logs
 
 6. Copy the Nginx site configs with `mv site-confs/* swag/nginx/site-confs/`.
 
@@ -231,9 +232,9 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
 
 9. Navigate to the S3 console by opening the following in a browser https://s3.example.com:9001
    
-   > [!NOTE]
-   > 
-   > Replace example.com with your own domain name.
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
 
 10. Login with `minio` as the user and the password you specified in the script at the "Minio root password" prompt.
 
@@ -251,26 +252,26 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
     
     - Enable "Expire Delete Marker"
     
-    > [!IMPORTANT]
-    > 
-    > Change "After" to the time period you wish to store edits to tabs for. E.g if you want to store edits to a tab for the past 30 days, set it to 30. 
+> [!IMPORTANT]
+> 
+> Change "After" to the time period you wish to store edits to tabs for. E.g if you want to store edits to a tab for the past 30 days, set it to 30. 
 
 14. Navigate to the "Access Keys" section in the side menu, and create an access key. 
     
-    > [!IMPORTANT]
-    > Store the access key and secret key somewhere temporarily as they are only shown once
+> [!IMPORTANT]
+> Store the access key and secret key somewhere temporarily as they are only shown once
 
 15. Open the application in a private web browser, by visiting [app.example.com](https://app.example.com).
     
-    > [!NOTE]
-    > 
-    > Use a private web browser untill you have set the organization settings, this is because it wil cache the incorrect settings on first load. 
+> [!NOTE]
+> 
+> Use a private web browser untill you have set the organization settings, this is because it wil cache the incorrect settings on first load. 
     
-    ---
+---
     
-    > [!NOTE]
-    > 
-    > Replace example.com with your own domain name.
+> [!NOTE]
+> 
+> Replace example.com with your own domain name.
 
 16.  Login with the user you created in the [Auth0](#auth0)
 
@@ -282,10 +283,8 @@ Click "Get License Key", copy the license key and when prompted in the gen.py sc
 
 20. Click the profile icon in top right and click "Profile" on this page click "Submit".
     
-    > [!NOTE]
-    > 
-    > This is to save your user information to Meilisearch so your user is searchable.
+> [!NOTE]
+> 
+> This is to save your user information to Meilisearch so your user is searchable.
 
 21.  Close the private browser window and then use the app as normal.
-
-22. 
