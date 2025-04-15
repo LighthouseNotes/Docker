@@ -36,7 +36,6 @@ services:
     container_name: swag
     links:
       - server
-      - web
     cap_add:
       - NET_ADMIN
     environment:
@@ -68,7 +67,7 @@ services:
       - KC_DB_PASSWORD=CHANGEME
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=CHANGEME
-      - KC_HOSTNAME=example.com
+      - KC_HOSTNAME=idp.example.com
       - KC_PROXY_HEADERS=xforwarded
     command: start --optimized
     restart: unless-stopped

@@ -91,14 +91,14 @@ compose["services"]["swag"]["environment"]["URL"] = root_domain
 ############
 # Postgres #
 ############
-compose["services"]["database"]["environment"]["POSTGRES_ROOT_PASSWORD"] = secrets.token_urlsafe(14)
+compose["services"]["postgresql"]["environment"]["POSTGRES_ROOT_PASSWORD"] = secrets.token_urlsafe(14)
 
 ############
 # Keycloak #
 ############
 compose["services"]["keycloak"]["environment"]["KC_DB_PASSWORD"] = keycloak_database_password
-compose["services"]["keyclaok"]["environment"]["KC_HOSTNAME"] = f"https://idp.{root_domain}"
-compose["services"]["keyclaok"]["environment"]["KEYCLOAK_ADMIN"] = getpass(f"Keycloak admin password {COLOR_GREEN}(input will not show){COLOR_END}: ")
+compose["services"]["keycloak"]["environment"]["KC_HOSTNAME"] = f"idp.{root_domain}"
+compose["services"]["keycloak"]["environment"]["KEYCLOAK_ADMIN"] = getpass(f"Keycloak admin password {COLOR_GREEN}(input will not show){COLOR_END}: ")
 
 #########
 # Minio #
